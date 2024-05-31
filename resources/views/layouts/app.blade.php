@@ -8,7 +8,8 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel Boolfolio - Base') }}</title>
+    {{--<title>{{ config('app.name', 'Laravel Boolfolio - Base') }}</title>--}}
+    <title>@yield('title', 'Boolfolio')</title>
 
 
     <!-- Fonts -->
