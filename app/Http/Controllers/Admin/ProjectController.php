@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 
+use App\Http\Requests\StoreProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -23,23 +24,26 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.projects.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreProjectRequest $request)
     {
-        //
+        $form_data = $request->validated();
+        dd($form_data);
+        $form_data['slug'] = Project::generateSlug($form_data['title']);
+        $newProject = Project::create($form_data);
+        return redirect()->route('admin.projects.show', $newProject->slug);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($slug)
+    public function show(Project $project)
     {
-        $project = Project::where('slug', $slug)->first();
         //dd($project);
         return view('admin.projects.show', compact('project'));
     }
@@ -49,7 +53,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        //
+        return view('admin.projects.edit', compact('project'));
     }
 
     /**
@@ -57,7 +61,14 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-        //
+        $request->validate([
+            'title' => 'required|max: 200',
+            'image' => 'nullable|image|max: 255',
+            'content' => 'nullable'
+        ]);
+
+        $project->update($request->all());
+        return redirect()->route('admin.projects.index')->with('success', 'Project updated successfully.');
     }
 
     /**
@@ -65,6 +76,7 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //
+        $project->delete();
+        return redirect()->route('admin.projects.index');
     }
 }
