@@ -33,9 +33,11 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request)
     {
         $form_data = $request->validated();
-        dd($form_data);
+        //dd($form_data);
         $form_data['slug'] = Project::generateSlug($form_data['title']);
+        
         $newProject = Project::create($form_data);
+             
         return redirect()->route('admin.projects.show', $newProject->slug);
     }
 
@@ -45,7 +47,7 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         //dd($project);
-        return view('admin.projects.show', compact('project'));
+    return view('admin.projects.show', compact('project'));
     }
 
     /**

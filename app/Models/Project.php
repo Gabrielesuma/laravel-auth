@@ -14,10 +14,12 @@ class Project extends Model
     public static function generateSlug($title){
         $slug = Str::slug($title, '-');
         $count = 1;
-        while(Project::where('slug', $slug)){
+
+        while(Project::where('slug', $slug)->first()){
             $slug = Str::slug($title, '-' . $count, '-');
             $count++;
         }
+       
         return $slug;
     }
 }
